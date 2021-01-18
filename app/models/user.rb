@@ -23,13 +23,42 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :articles, dependent: :destroy
+  has_one :profile, dependent: :destroy
+
+  delegate :birthday, :age, :gender, to: :profile, allow_nil: true
+  #def birthday
+  #  profile&.birthday
+  #end
+
+  #def gender
+  #  profile&.gender
+  #end
 
   def has_written?(article)
     articles.exists?(id: article.id)
   end
 
   def display_name
-    self.email.split('@').first
+    #if profile && profile.nickname
+    # profile.nickname
+    #else
+    # self.email.split('@').first
+    #end
+
+    #ボッチ演算子（profileがnilじゃないときnicknameを実行)
+    profile&.nickname || self.email.split('@').first
     #first = [0]も可
+  end
+
+  def prepare_profile
+    profile || build_profile
+  end
+
+  def avatar_image
+    if profile&.avatar&.attached?
+      profile.avatar
+    else
+      'default-avatar.png'
+    end
   end
 end
