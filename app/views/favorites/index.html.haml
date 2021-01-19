@@ -1,0 +1,5 @@
+.container
+  %h2
+    お気に入りの記事
+  - @article.each do |article|
+    = render 'commons/article', article: article

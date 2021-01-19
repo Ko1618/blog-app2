@@ -5,8 +5,11 @@ Rails.application.routes.draw do
 
   resources :articles do
     resources :comments, only: [:new, :create]
+
+    resource :like, only: [:create, :destroy]
   end
 
   resource :profile, only: [:show, :edit, :update]
   #1対1のリレーション
+  resources :favorites, only: [:index]
 end
